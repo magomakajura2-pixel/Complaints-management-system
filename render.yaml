@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: cms-laravel
+    runtime: php
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: php artisan serve --host=0.0.0.0 --port:$PORT
+    envVars:
+      - key: APP_NAME
+        value: CMS
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: https://cms-laravel.onrender.com
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: cms-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: cms-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: cms-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: cms-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: cms-db
+          property: password
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: LOG_CHANNEL
+        value: stderr
+
+  - type: pgsql
+    name: cms-db
+    plan: free
+    databaseName: cms
